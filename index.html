@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            background: black;
+            color: white;
+            width: 100vw;
+            height: 100vh;
+            font-family: monospace;
+        }
+
+        header {
+            user-select: none;
+            box-sizing: border-box;
+            height: 3.2rem;
+            padding: 0.4rem;
+            font-weight: bold;
+            font-size: 1rem;
+            border-bottom: solid white 1px;
+            display: flex;
+            justify-content: space-between;
+            text-transform: uppercase;
+        }
+
+        canvas {
+            background: black;
+            /* enlève la scrollbar */
+            display: block;
+            /* 100% du viewport */
+            width: 100vw;
+            /* 100% du viewport - le header*/
+            height: calc(100% - 3.2rem);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        DOTS_IA
+    </header>
+    <canvas id="map"></canvas>
+</body>
+
+<script src="dist/bundle.js"></script>
+
+</html>
