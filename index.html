@@ -29,13 +29,15 @@
             text-transform: uppercase;
         }
 
+        header div{
+            max-width: 30%;
+            height: 100%;
+        }
+
         canvas {
             background: black;
-            /* enlève la scrollbar */
             display: block;
-            /* 100% du viewport */
             width: 100vw;
-            /* 100% du viewport - le header*/
             height: calc(100% - 3.2rem);
         }
     </style>
@@ -43,9 +45,10 @@
 
 <body>
     <header>
-        DOTS_IA
+        <div>The Death Labyrinth</div>
+        <div>Generation number : <span id="nbGen">1</span></div>
     </header>
-    <canvas id="map"></canvas>
+    <canvas></canvas>
 </body>
 
 <script src="dist/bundle.js"></script>

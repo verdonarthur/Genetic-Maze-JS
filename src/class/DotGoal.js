@@ -1,9 +1,22 @@
-import { Dot } from './Dot'
+import { Adventurer } from './Adventurer'
 
-export class DotGoal extends Dot {
+export class DotGoal {
     constructor(ctx) {
-        super(ctx.canvas.width - 100, ctx.canvas.height - 100, 'red', ctx)
-        this.radius = 50
+        this.x = ctx.canvas.width - 100
+        this.y = ctx.canvas.height/2 - 50
+        this.ctx = ctx
+        this.width = 100
+        this.height = 100
     }
-    
+
+    draw() {
+        this.ctx.beginPath();
+
+        this.ctx.fillStyle = 'blue'
+
+        this.ctx.fillRect(this.x, this.y, this.width, this.height);
+
+        this.ctx.closePath();
+    }
+
 }

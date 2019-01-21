@@ -1,5 +1,5 @@
-import { Dot } from './Dot'
-import {MyMath} from './MyMath'
+import { Adventurer } from './Adventurer'
+import { MyMath } from './MyMath'
 
 export class Population {
 
@@ -8,10 +8,10 @@ export class Population {
         this.fitnessSum
         this.gen = 1
         this.bestDot = 0    //the index of the best dot in the dots[]
-        this.minStep = 1000
+        this.minStep = 10000
 
         for (let i = 0; i < size; i++) {
-            this.dotsPopulation.push(new Dot(20, 20, 'white', ctx))
+            this.dotsPopulation.push(new Adventurer(10, ctx.canvas.height / 2, 'white', ctx))
         }
 
     }
@@ -35,7 +35,7 @@ export class Population {
         let allDead = true
 
         this.dotsPopulation.forEach((dot) => {
-            if (!dot.isDead) {
+            if (!dot.isDead && !dot.reachedGoal) {
                 allDead = false
                 return
             }
@@ -52,6 +52,8 @@ export class Population {
         // the champion lives on
         newDotsPopulation[0] = this.dotsPopulation[this.bestDot].makeABaby()
         newDotsPopulation[0].isBest = true
+        newDotsPopulation[0].color = 'green'
+        newDotsPopulation[0].RADIUS = newDotsPopulation[0].RADIUS * 3
 
         for (let i = 1; i < newDotsPopulation.length; i++) {
             let parent = this.selectParent()
@@ -85,37 +87,36 @@ export class Population {
         for (let i = 0; i < this.dotsPopulation.length; i++) {
             runningSum += this.dotsPopulation[i].fitness
 
-            if(runningSum > rand){
+            if (runningSum > rand) {
                 return this.dotsPopulation[i]
             }
-            
+
         }
 
         return null
     }
 
-    mutateBabies(){
+    mutateBabies() {
         for (let i = 0; i < this.dotsPopulation.length; i++) {
             this.dotsPopulation[i].brain.mutate()
-            
         }
     }
 
-    setBestDot(){
+    setBestDot() {
         let max = 0
         let maxIndex = 0
 
         for (let i = 0; i < this.dotsPopulation.length; i++) {
-            if(this.dotsPopulation[i].fitness > max){
+            if (this.dotsPopulation[i].fitness > max) {
                 max = this.dotsPopulation[i].fitness
-                maxIndex = 1
+                maxIndex = i
             }
-            
+
         }
 
         this.bestDot = maxIndex
 
-        if(this.dotsPopulation[this.bestDot].reachedGoal){
+        if (this.dotsPopulation[this.bestDot].reachedGoal) {
             this.minStep = this.dotsPopulation[this.bestDot].brain.step
             console.log("step :", this.minStep)
         }
