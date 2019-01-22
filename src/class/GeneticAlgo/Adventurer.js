@@ -18,7 +18,7 @@ export class Adventurer extends GridObject {
         this.reachedGoal = false
         this.isDead = false
         this.direction = 0
-        this.brain = new BrainOfDot(1000)
+        this.brain = new BrainOfDot(500)
     }
 
     /**
@@ -26,10 +26,13 @@ export class Adventurer extends GridObject {
      * @param {*} deltaT 
      * @param {*} grid 
      */
-    move(deltaT, grid = this.grid) {
+    move(walls, grid = this.grid, chest) {
         if (this.isDead || this.reachedGoal) {
             return
         }
+
+        if (this.checkTouchGoal(chest))
+            return
 
         if (this.brain.directions.length > this.brain.step) {
             this.direction = this.brain.directions[this.brain.step]
@@ -42,8 +45,15 @@ export class Adventurer extends GridObject {
         let specAngle = (Math.PI / 4)
         this.direction = Math.round(this.direction / specAngle) * specAngle
 
-        this.x += Math.round(this.SPEED * Math.cos(this.direction))
-        this.y += Math.round(this.SPEED * Math.sin(this.direction))
+        let newPosX = Math.round(this.SPEED * Math.cos(this.direction))
+        let newPosY = Math.round(this.SPEED * Math.sin(this.direction))
+
+        if (this.checkCollision(walls, grid, newPosX, newPosY))
+            return
+
+
+        this.x += newPosX
+        this.y += newPosY
 
     }
 
@@ -52,20 +62,24 @@ export class Adventurer extends GridObject {
      * @param {*} walls 
      * @param {*} grid 
      */
-    checkCollision(walls, grid) {
+    checkCollision(walls, grid, newPosX, newPosY) {
         if (this.isDead || this.reachedGoal)
-            return
+            return true
 
-        if ((this.x < 1 || this.x >= grid.width - 1)
-            || (this.y < 1 || this.y >= grid.height - 1)) {
-            this.isDead = true
-            return
+        if ((this.x + newPosX < 0 || this.x + newPosX >= grid.width)
+            || (this.y + newPosY < 0 || this.y + newPosY >= grid.height)) {
+
+            return true
         }
 
+        let hasCollide = false
         walls.forEach(wall => {
-            if (wall.isAdventurerColliding(this))
-                this.isDead = true
+            if (wall.isColliding(this.x + newPosX, this.y + newPosY)) {
+                hasCollide = true
+            }
         });
+
+        return hasCollide
     }
 
     /**
@@ -73,16 +87,16 @@ export class Adventurer extends GridObject {
      * @param {*} dotGoal 
      */
     checkTouchGoal(dotGoal) {
-        if (this.isDead || this.reachedGoal)
-            return
-
         if (
             ((this.x >= dotGoal.x && this.x < dotGoal.x + dotGoal.width)
                 && (this.y >= dotGoal.y && this.y < dotGoal.y + dotGoal.height))
             || (this.x == dotGoal.x && this.y == dotGoal.y)
         ) {
             this.reachedGoal = true
+            return true
         }
+
+        return false
     }
 
     /**

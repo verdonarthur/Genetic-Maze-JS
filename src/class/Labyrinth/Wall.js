@@ -5,8 +5,8 @@ export class Wall extends GridObject {
         super(x, y, width, height, 'brown', ctx, grid)
     }
 
-    isAdventurerColliding(adventurer) {
-        return (adventurer.x >= this.x && adventurer.x < this.x + this.width) 
-        && (adventurer.y >= this.y && adventurer.y < this.y + this.height)
+    isColliding(posX, posY) {
+        return (posX >= this.x && posX <= this.x + this.width) 
+        && (posY >= this.y && posY <= this.y + this.height)
     }
 }

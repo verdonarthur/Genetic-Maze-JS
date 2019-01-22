@@ -50,9 +50,9 @@ class Game {
         } else {
             this.population.checkPopulation()
             this.population.Adventurers.forEach((dot) => {
-                dot.checkCollision(this.walls, this.grid)
-                dot.checkTouchGoal(this.dotGoal)
-                dot.move(deltaT, this.grid)
+                
+                
+                dot.move(this.walls, this.grid, this.dotGoal)
             })
         }
     }
