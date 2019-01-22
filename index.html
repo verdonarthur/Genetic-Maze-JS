@@ -40,10 +40,27 @@
             list-style: none;
         }
 
+        header button {
+            background: black;
+            border: 1px solid red;
+            width: 100px;
+            height: 20px;
+            color: white;            
+            font-family: monospace;
+        }
+
+        header input {
+            background:black;
+            color:white;
+            border:0;            
+            font-family: monospace;
+        }
+
         canvas {
             background: black;
             display: block;
-            width: 100vw;
+            /*padding:0 20% 0 20%;*/
+            width: 100%;
             height: calc(100% - 3.2rem);
         }
     </style>
@@ -52,6 +69,16 @@
 <body>
     <header>
         <div>The Death Labyrinth</div>
+        <div>
+            <ul>
+                <li>FPS <input id="ActualFPS" value="60"></li>
+                <li>
+                    <button id="FPSDown">FPS Down</button>
+                    <button id="FPSUp">FPS UP</button>
+                </li>
+
+            </ul>
+        </div>
         <div>
             <ul>
                 <li>Generation number : <span id="nbGen">1</span></li>

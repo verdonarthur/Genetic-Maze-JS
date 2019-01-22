@@ -1,4 +1,4 @@
-import {MyMath} from './MyMath'
+import {MyMath} from '../MyMath'
 
 export class BrainOfDot {
 

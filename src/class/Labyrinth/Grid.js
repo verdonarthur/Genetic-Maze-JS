@@ -1,6 +1,6 @@
 export class Grid {
 
-    constructor(ctx, tileSize = 16, gridColor = "lightgrey") {
+    constructor(ctx, tileSize = 30, gridColor = "lightgrey") {
         
         this.tileSize = tileSize;
         this.gridColor = gridColor;

@@ -1,9 +1,11 @@
-import { DotGoal } from './class/DotGoal';
-import { Grid } from './class/Grid';
-import { Population } from './class/Population';
-import { Wall } from './class/Wall';
+import { Chest } from './class/Labyrinth/Chest';
+import { Grid } from './class/Labyrinth/Grid';
+import { Population } from './class/GeneticAlgo/Population';
+import { Wall } from './class/Labyrinth/Wall';
 
-
+/**
+ * Class used to set up the environment
+ */
 class Game {
     constructor() {
         this.ctx = $("canvas").get(0).getContext("2d")
@@ -12,18 +14,16 @@ class Game {
 
         this.grid = new Grid(this.ctx)
 
-        this.dotGoal = new DotGoal(this.ctx, this.grid)
+        this.dotGoal = new Chest(this.ctx, this.grid)
 
         this.walls = [
-            new Wall(10, 0, 2, 20, this.ctx, this.grid),
-            new Wall(20, this.grid.height-20, 2, 20, this.ctx, this.grid),
-            //new Wall(500, 0, 70, 700, this.ctx),
-            //new Wall(500,this.ctx.canvas.height/2-250, 35, 500, this.ctx)
+            new Wall(5, 0, 2, Math.round(this.grid.height / 2), this.ctx, this.grid),
+            new Wall(10, this.grid.height - Math.round(this.grid.height / 2), 2, Math.round(this.grid.height / 2), this.ctx, this.grid),
+            new Wall(15, 0, 2, Math.round(this.grid.height / 2), this.ctx, this.grid),
+            new Wall(20, this.grid.height - Math.round(this.grid.height / 2), 2, Math.round(this.grid.height / 2), this.ctx, this.grid),
         ]
 
-        this.population = new Population(1000, this.ctx)
-        //this.dotsArray = [new Dot(this.ctx.canvas.width / 2, this.ctx.canvas.height -20, 'red')]
-        
+        this.population = new Population(500, this.ctx)
     }
 
     mainDraw() {
@@ -34,7 +34,7 @@ class Game {
 
         this.dotGoal.draw()
 
-        this.population.dotsPopulation.forEach((dot) => {
+        this.population.Adventurers.forEach((dot) => {
             dot.draw(this.grid)
         })
 
@@ -42,15 +42,14 @@ class Game {
     }
 
     update(deltaT) {
-        if (this.population.isAllDotsDead()) {
-            // genetic algo
-            this.population.calculateAllDotFitness(this.dotGoal)
+        if (this.population.isAllAdventurerDead()) {
+            this.population.calculateAllAdventurerFitness(this.dotGoal)
             this.population.naturalSelection()
             this.population.mutateBabies()
             $("#nbGen").text(this.population.gen)
         } else {
             this.population.checkPopulation()
-            this.population.dotsPopulation.forEach((dot) => {
+            this.population.Adventurers.forEach((dot) => {
                 dot.checkCollision(this.walls, this.grid)
                 dot.checkTouchGoal(this.dotGoal)
                 dot.move(deltaT, this.grid)
@@ -62,6 +61,9 @@ class Game {
 let lastTimestamp = window.performance.now();
 let game = new Game()
 
+/*
+--------------- LAUNCH GAME LOOP
+*/
 
 const step = () => {
 
@@ -70,9 +72,49 @@ const step = () => {
     lastTimestamp = now;
 
     game.mainDraw()
-    
+
     game.update(deltaT)
 
 }
 
 let timer = setInterval(step, 1000 / 60)
+
+
+/*
+-------------- CONTROL MANAGEMENT
+*/
+function setNewFPS(FPS) {
+    if (FPS < 10 || FPS > 300) return;
+
+    $("#ActualFPS").val(FPS);
+
+    if (timer) {
+        clearInterval(timer);
+        timer = null;
+        timer = setInterval(step, 1000 / FPS)
+    }
+}
+
+$("#FPSUp").on('click', (e) => {
+    let fps = parseInt($("#ActualFPS").val())
+    fps += 5
+
+
+    setNewFPS(fps)
+})
+
+$("#FPSDown").on('click', (e) => {
+    let fps = parseInt($("#ActualFPS").val())
+    fps -= 5
+
+
+    setNewFPS(fps)
+})
+
+$("#ActualFPS").on("change", (e) => {
+    let fps = parseInt($("#ActualFPS").val())
+
+    if (fps < 10 || fps > 300) { $("#ActualFPS").val(60) }
+
+    setNewFPS(fps)
+})
