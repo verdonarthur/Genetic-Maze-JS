@@ -29,9 +29,15 @@
             text-transform: uppercase;
         }
 
-        header div{
+        header div {
             max-width: 30%;
             height: 100%;
+        }
+
+        header div ul {
+            margin: 0;
+            font-size: 0.7em;
+            list-style: none;
         }
 
         canvas {
@@ -46,7 +52,12 @@
 <body>
     <header>
         <div>The Death Labyrinth</div>
-        <div>Generation number : <span id="nbGen">1</span></div>
+        <div>
+            <ul>
+                <li>Generation number : <span id="nbGen">1</span></li>
+                <li>Nb step : <span id="nbStep">-</span></li>
+            </ul>
+        </div>
     </header>
     <canvas></canvas>
 </body>

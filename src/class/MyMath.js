@@ -7,6 +7,9 @@ export class MyMath {
         let a = x1 - x2;
         let b = y1 - y2;
 
+        if(a==0 && b==0)
+            return 0
+
         return Math.sqrt(a * a + b * b);
     }
 }

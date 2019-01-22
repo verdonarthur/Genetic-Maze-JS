@@ -7,18 +7,17 @@ export class Population {
         this.dotsPopulation = []
         this.fitnessSum
         this.gen = 1
-        this.bestDot = 0    //the index of the best dot in the dots[]
-        this.minStep = 10000
+        this.bestDot = 0
+        this.minStep = 1000
 
         for (let i = 0; i < size; i++) {
-            this.dotsPopulation.push(new Adventurer(10, ctx.canvas.height / 2, 'white', ctx))
+            this.dotsPopulation.push(new Adventurer(2, 5, 'white', ctx))
         }
 
     }
 
     checkPopulation() {
         this.dotsPopulation.forEach((dot) => {
-            //if the dot has already taken more steps than the best dot has taken to reach the goal
             if (dot.brain.step > this.minStep) {
                 dot.isDead = true
             }
@@ -81,7 +80,6 @@ export class Population {
      */
     selectParent() {
         let rand = MyMath.random(this.fitnessSum)
-
         let runningSum = 0
 
         for (let i = 0; i < this.dotsPopulation.length; i++) {
@@ -92,7 +90,7 @@ export class Population {
             }
 
         }
-
+        debugger;
         return null
     }
 
@@ -118,7 +116,8 @@ export class Population {
 
         if (this.dotsPopulation[this.bestDot].reachedGoal) {
             this.minStep = this.dotsPopulation[this.bestDot].brain.step
-            console.log("step :", this.minStep)
+            
+            $("#nbStep").text(this.minStep)
         }
     }
 }

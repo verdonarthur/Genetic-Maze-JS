@@ -1,20 +1,21 @@
-import { Adventurer } from './Adventurer'
 
 export class DotGoal {
-    constructor(ctx) {
-        this.x = ctx.canvas.width - 100
-        this.y = ctx.canvas.height/2 - 50
+    constructor(ctx,grid) {
         this.ctx = ctx
-        this.width = 100
-        this.height = 100
+        this.grid = grid
+        this.width = 1
+        this.height = 1
+        
+        this.x = Math.round(grid.width-2)
+        this.y = Math.round(grid.height/2 - 1)
     }
 
-    draw() {
+    draw(grid = this.grid) {
         this.ctx.beginPath();
 
         this.ctx.fillStyle = 'blue'
 
-        this.ctx.fillRect(this.x, this.y, this.width, this.height);
+        this.ctx.fillRect(this.x*grid.tileSize, this.y*grid.tileSize, this.width*grid.tileSize, this.height*grid.tileSize);
 
         this.ctx.closePath();
     }

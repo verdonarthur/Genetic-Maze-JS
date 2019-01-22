@@ -1,4 +1,5 @@
 import { DotGoal } from './class/DotGoal';
+import { Grid } from './class/Grid';
 import { Population } from './class/Population';
 import { Wall } from './class/Wall';
 
@@ -9,27 +10,35 @@ class Game {
         this.ctx.canvas.width = this.ctx.canvas.clientWidth
         this.ctx.canvas.height = this.ctx.canvas.clientHeight
 
-        this.dotGoal = new DotGoal(this.ctx)
+        this.grid = new Grid(this.ctx)
+
+        this.dotGoal = new DotGoal(this.ctx, this.grid)
 
         this.walls = [
-            //new Wall(470, this.ctx.canvas.height-500, 70, 500, this.ctx),
-            new Wall(500,this.ctx.canvas.height/2-250, 70, 500, this.ctx)
+            new Wall(10, 0, 2, 20, this.ctx, this.grid),
+            new Wall(20, this.grid.height-20, 2, 20, this.ctx, this.grid),
+            //new Wall(500, 0, 70, 700, this.ctx),
+            //new Wall(500,this.ctx.canvas.height/2-250, 35, 500, this.ctx)
         ]
 
         this.population = new Population(1000, this.ctx)
         //this.dotsArray = [new Dot(this.ctx.canvas.width / 2, this.ctx.canvas.height -20, 'red')]
+        
     }
 
     mainDraw() {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
+        this.grid.draw(this.ctx)
         this.walls.forEach((wall) => wall.draw())
 
         this.dotGoal.draw()
 
         this.population.dotsPopulation.forEach((dot) => {
-            dot.draw()
+            dot.draw(this.grid)
         })
+
+
     }
 
     update(deltaT) {
@@ -42,23 +51,28 @@ class Game {
         } else {
             this.population.checkPopulation()
             this.population.dotsPopulation.forEach((dot) => {
-                dot.checkCollision(this.walls)
+                dot.checkCollision(this.walls, this.grid)
                 dot.checkTouchGoal(this.dotGoal)
-                dot.move(deltaT)
+                dot.move(deltaT, this.grid)
             })
         }
     }
 }
 
-let lastTimestamp = 0
+let lastTimestamp = window.performance.now();
 let game = new Game()
 
-const step = (now, lastTime, ctx) => {
-    requestAnimationFrame(time => step(time, now))
-    let deltaT = now - lastTime;
+
+const step = () => {
+
+    let now = window.performance.now();
+    let deltaT = now - lastTimestamp;
+    lastTimestamp = now;
 
     game.mainDraw()
+    
     game.update(deltaT)
+
 }
 
-requestAnimationFrame(now => step(now, now))
+let timer = setInterval(step, 1000 / 60)
