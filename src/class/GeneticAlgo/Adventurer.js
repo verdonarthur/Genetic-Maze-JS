@@ -1,4 +1,4 @@
-import { BrainOfDot } from './BrainOfDot'
+import { Brain } from './Brain'
 import { MyMath } from '../MyMath'
 import { GridObject } from '../GridObject';
 
@@ -18,7 +18,7 @@ export class Adventurer extends GridObject {
         this.reachedGoal = false
         this.isDead = false
         this.direction = 0
-        this.brain = new BrainOfDot(500)
+        this.brain = new Brain(1000)
     }
 
     /**
@@ -84,15 +84,16 @@ export class Adventurer extends GridObject {
 
     /**
      * Check if the adventurer touch the goal
-     * @param {*} dotGoal 
+     * @param {*} goal 
      */
-    checkTouchGoal(dotGoal) {
+    checkTouchGoal(goal) {
         if (
-            ((this.x >= dotGoal.x && this.x < dotGoal.x + dotGoal.width)
-                && (this.y >= dotGoal.y && this.y < dotGoal.y + dotGoal.height))
-            || (this.x == dotGoal.x && this.y == dotGoal.y)
+            ((this.x >= goal.x && this.x < goal.x + goal.width)
+                && (this.y >= goal.y && this.y < goal.y + goal.height))
+            || (this.x == goal.x && this.y == goal.y)
         ) {
             this.reachedGoal = true
+            
             return true
         }
 
@@ -101,16 +102,18 @@ export class Adventurer extends GridObject {
 
     /**
      * Calculate the ability of the adventurer to pass his gen
-     * @param {*} dotGoal 
+     * @param {*} goal 
      */
-    calculateFitness(dotGoal) {
+    calculateFitness(goal) {
 
         if (this.reachedGoal) {
-            this.fitness = 1.0 / 16.0 + 10000.0 / (this.brain.step * this.brain.step)
+            this.fitness = (1 / (this.brain.step * this.brain.step)) + 1
         } else {
-            let distanceToGoal = Math.round(MyMath.distBetweenTwoPoints(this.x, this.y, dotGoal.x, dotGoal.y))
+            let distanceToGoal = Math.round(MyMath.distBetweenTwoPoints(this.x, this.y, goal.x, goal.y))
 
-            this.fitness = 1.0 / (distanceToGoal != 0 ? (distanceToGoal * distanceToGoal) : 1)
+            if(distanceToGoal == 0){this.fitness = 0; return}
+
+            this.fitness = 1.0 / (distanceToGoal * distanceToGoal)
         }
     }
 

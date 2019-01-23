@@ -6,7 +6,7 @@ export class Wall extends GridObject {
     }
 
     isColliding(posX, posY) {
-        return (posX >= this.x && posX <= this.x + this.width) 
-        && (posY >= this.y && posY <= this.y + this.height)
+        return (posX >= this.x && posX < this.x + this.width) 
+        && (posY >= this.y && posY < this.y + this.height)
     }
 }

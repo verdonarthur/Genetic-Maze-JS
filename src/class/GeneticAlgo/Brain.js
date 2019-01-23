@@ -1,6 +1,6 @@
 import {MyMath} from '../MyMath'
 
-export class BrainOfDot {
+export class Brain {
 
     constructor(size) {
         this.directions = []
@@ -28,7 +28,7 @@ export class BrainOfDot {
      * returns a perfect copy of this brain object 
      */
     clone() {
-        let clone = new BrainOfDot(this.directions.length)
+        let clone = new Brain(this.directions.length)
         for (let i = 0; i < this.directions.length; i++) {
             clone.directions[i] = this.directions[i]
         }

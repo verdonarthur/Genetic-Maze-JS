@@ -7,7 +7,7 @@ export class Population {
         this.Adventurers = []
         this.fitnessSum
         this.gen = 1
-        this.bestDot = 0
+        this.bestAdventurer = 0
         this.minStep = 1000
 
         for (let i = 0; i < size; i++) {
@@ -20,9 +20,9 @@ export class Population {
      * Check if all the population is alive
      */
     checkPopulation() {
-        this.Adventurers.forEach((dot) => {
-            if (dot.brain.step > this.minStep) {
-                dot.isDead = true
+        this.Adventurers.forEach((adventurer) => {
+            if (adventurer.brain.step > this.minStep) {
+                adventurer.isDead = true
             }
         })
     }
@@ -32,8 +32,8 @@ export class Population {
      * @param {*} chest 
      */
     calculateAllAdventurerFitness(chest) {
-        this.Adventurers.forEach((dot) => {
-            dot.calculateFitness(chest)
+        this.Adventurers.forEach((adventurer) => {
+            adventurer.calculateFitness(chest)
         })
     }
 
@@ -43,8 +43,8 @@ export class Population {
     isAllAdventurerDead() {
         let allDead = true
 
-        this.Adventurers.forEach((dot) => {
-            if (!dot.isDead && !dot.reachedGoal) {
+        this.Adventurers.forEach((adventurer) => {
+            if (!adventurer.isDead && !adventurer.reachedGoal) {
                 allDead = false
                 return
             }
@@ -65,10 +65,9 @@ export class Population {
         this.calculateFitnessSum()
 
         // the champion lives on
-        newAdventurers[0] = this.Adventurers[this.bestDot].makeABaby()
+        newAdventurers[0] = this.Adventurers[this.bestAdventurer].makeABaby()
         newAdventurers[0].isBest = true
         newAdventurers[0].color = 'green'
-        newAdventurers[0].RADIUS = newAdventurers[0].RADIUS * 3
 
         for (let i = 1; i < newAdventurers.length; i++) {
             let parent = this.selectParent()
@@ -137,13 +136,12 @@ export class Population {
                 max = this.Adventurers[i].fitness
                 maxIndex = i
             }
-
         }
+        console.log(this.Adventurers[maxIndex].brain.step)
+        this.bestAdventurer = maxIndex
 
-        this.bestDot = maxIndex
-
-        if (this.Adventurers[this.bestDot].reachedGoal) {
-            this.minStep = this.Adventurers[this.bestDot].brain.step
+        if (this.Adventurers[this.bestAdventurer].reachedGoal) {
+            this.minStep = this.Adventurers[this.bestAdventurer].brain.step
             
             $("#nbStep").text(this.minStep)
         }

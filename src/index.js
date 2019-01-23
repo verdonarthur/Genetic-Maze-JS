@@ -1,7 +1,7 @@
-import { Chest } from './class/Labyrinth/Chest';
-import { Grid } from './class/Labyrinth/Grid';
+import { Chest } from './class/Maze/Chest';
+import { Grid } from './class/Maze/Grid';
 import { Population } from './class/GeneticAlgo/Population';
-import { Wall } from './class/Labyrinth/Wall';
+import { Wall } from './class/Maze/Wall';
 
 /**
  * Class used to set up the environment
@@ -14,7 +14,7 @@ class Game {
 
         this.grid = new Grid(this.ctx)
 
-        this.dotGoal = new Chest(this.ctx, this.grid)
+        this.goal = new Chest(this.ctx, this.grid)
 
         this.walls = [
             new Wall(5, 0, 2, Math.round(this.grid.height / 2), this.ctx, this.grid),
@@ -23,36 +23,40 @@ class Game {
             new Wall(20, this.grid.height - Math.round(this.grid.height / 2), 2, Math.round(this.grid.height / 2), this.ctx, this.grid),
         ]
 
-        this.population = new Population(500, this.ctx)
+        this.population = new Population(250, this.ctx)
     }
 
-    mainDraw() {
+    mainDraw(showOnlyTheBest) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
         this.grid.draw(this.ctx)
         this.walls.forEach((wall) => wall.draw())
 
-        this.dotGoal.draw()
+        this.goal.draw()
 
-        this.population.Adventurers.forEach((dot) => {
-            dot.draw(this.grid)
+        this.population.Adventurers.forEach((adventurer) => {
+            if (showOnlyTheBest) {
+                if (adventurer.isBest) {
+                    adventurer.draw(this.grid)
+                }
+            } else {
+                adventurer.draw(this.grid)
+            }
         })
-
-
     }
 
     update(deltaT) {
         if (this.population.isAllAdventurerDead()) {
-            this.population.calculateAllAdventurerFitness(this.dotGoal)
+            this.population.calculateAllAdventurerFitness(this.goal)
             this.population.naturalSelection()
             this.population.mutateBabies()
             $("#nbGen").text(this.population.gen)
         } else {
             this.population.checkPopulation()
-            this.population.Adventurers.forEach((dot) => {
-                
-                
-                dot.move(this.walls, this.grid, this.dotGoal)
+            this.population.Adventurers.forEach((adventurer) => {
+
+
+                adventurer.move(this.walls, this.grid, this.goal)
             })
         }
     }
@@ -60,6 +64,7 @@ class Game {
 
 let lastTimestamp = window.performance.now();
 let game = new Game()
+let showOnlyTheBest = false
 
 /*
 --------------- LAUNCH GAME LOOP
@@ -71,7 +76,7 @@ const step = () => {
     let deltaT = now - lastTimestamp;
     lastTimestamp = now;
 
-    game.mainDraw()
+    game.mainDraw(showOnlyTheBest)
 
     game.update(deltaT)
 
@@ -117,4 +122,8 @@ $("#ActualFPS").on("change", (e) => {
     if (fps < 10 || fps > 300) { $("#ActualFPS").val(60) }
 
     setNewFPS(fps)
+})
+
+$("#showTheBest").on('click', (e) => {
+    showOnlyTheBest = !showOnlyTheBest
 })
