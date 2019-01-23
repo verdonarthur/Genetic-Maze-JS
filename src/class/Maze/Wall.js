@@ -1,8 +1,9 @@
 import { GridObject } from "../GridObject";
+import CONFIG from '../../config'
 
 export class Wall extends GridObject {
     constructor(x, y, width, height, ctx, grid) {
-        super(x, y, width, height, 'brown', ctx, grid)
+        super(x, y, width, height, CONFIG.WALL_COLOR, ctx, grid)
     }
 
     isColliding(posX, posY) {

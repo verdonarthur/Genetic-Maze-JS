@@ -1,6 +1,8 @@
+import CONFIG from '../../config'
+
 export class Grid {
 
-    constructor(ctx, tileSize = 30, gridColor = "lightgrey") {
+    constructor(ctx, tileSize = CONFIG.GRID_SIZE, gridColor = CONFIG.GRID_COLOR) {
         
         this.tileSize = tileSize;
         this.gridColor = gridColor;
@@ -28,10 +30,11 @@ export class Grid {
     }
 
     draw(ctx) {
-        ctx.strokeStyle = this.gridColor;
+        ctx.strokeStyle = this.gridColor
+
         for (let x = 0; x < this.grid.length; x++) {
             for (let y = 0; y < this.grid[x].length; y++) {
-                ctx.strokeRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+                ctx.strokeRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize)
             }
         }
     }

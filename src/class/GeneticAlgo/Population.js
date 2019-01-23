@@ -1,5 +1,6 @@
 import { Adventurer } from './Adventurer'
 import { MyMath } from '../MyMath'
+import CONFIG from '../../config'
 
 export class Population {
 
@@ -8,7 +9,7 @@ export class Population {
         this.fitnessSum
         this.gen = 1
         this.bestAdventurer = 0
-        this.minStep = 1000
+        this.minStep = CONFIG.MIN_STEP
 
         for (let i = 0; i < size; i++) {
             this.Adventurers.push(new Adventurer(2, 5, ctx))
@@ -67,7 +68,7 @@ export class Population {
         // the champion lives on
         newAdventurers[0] = this.Adventurers[this.bestAdventurer].makeABaby()
         newAdventurers[0].isBest = true
-        newAdventurers[0].color = 'green'
+        newAdventurers[0].color = CONFIG.BEST_ADVENTURER_COLOR
 
         for (let i = 1; i < newAdventurers.length; i++) {
             let parent = this.selectParent()
@@ -137,7 +138,7 @@ export class Population {
                 maxIndex = i
             }
         }
-        console.log(this.Adventurers[maxIndex].brain.step)
+        
         this.bestAdventurer = maxIndex
 
         if (this.Adventurers[this.bestAdventurer].reachedGoal) {

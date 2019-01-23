@@ -1,4 +1,5 @@
 import {MyMath} from '../MyMath'
+import CONFIG from '../../config'
 
 export class Brain {
 
@@ -41,7 +42,7 @@ export class Brain {
      */
     mutate() {
         //chance that any vector in directions gets changed
-        let mutationRate = 0.01
+        let mutationRate = CONFIG.PERCENTAGE_MUTATION
 
         for (let i = 0; i < this.directions.length; i++) {
             let rand = MyMath.random(1)

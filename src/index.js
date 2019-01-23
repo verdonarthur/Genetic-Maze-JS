@@ -2,6 +2,7 @@ import { Chest } from './class/Maze/Chest';
 import { Grid } from './class/Maze/Grid';
 import { Population } from './class/GeneticAlgo/Population';
 import { Wall } from './class/Maze/Wall';
+import CONFIG from './config'
 
 /**
  * Class used to set up the environment
@@ -16,14 +17,21 @@ class Game {
 
         this.goal = new Chest(this.ctx, this.grid)
 
-        this.walls = [
-            new Wall(5, 0, 2, Math.round(this.grid.height / 2), this.ctx, this.grid),
-            new Wall(10, this.grid.height - Math.round(this.grid.height / 2), 2, Math.round(this.grid.height / 2), this.ctx, this.grid),
-            new Wall(15, 0, 2, Math.round(this.grid.height / 2), this.ctx, this.grid),
-            new Wall(20, this.grid.height - Math.round(this.grid.height / 2), 2, Math.round(this.grid.height / 2), this.ctx, this.grid),
-        ]
+        this.walls = []
 
-        this.population = new Population(250, this.ctx)
+        let nbWall = CONFIG.NB_WALL
+        let lengthWallToPlace = this.grid.width / (nbWall + 1);
+        let wallWidth = 2
+        let wallHeight = Math.round(this.grid.height / 2) + 2
+
+        for (let i = 1; i < nbWall + 1; i++) {
+            if (i % 2)
+                this.walls[i] = new Wall(i * lengthWallToPlace, 0, wallWidth, wallHeight, this.ctx, this.grid)
+            else
+                this.walls[i] = new Wall(i * lengthWallToPlace, this.grid.height - wallHeight, wallWidth, wallHeight, this.ctx, this.grid)
+        }
+
+        this.population = new Population(CONFIG.NB_POPULATION, this.ctx)
     }
 
     mainDraw(showOnlyTheBest) {
@@ -54,8 +62,6 @@ class Game {
         } else {
             this.population.checkPopulation()
             this.population.Adventurers.forEach((adventurer) => {
-
-
                 adventurer.move(this.walls, this.grid, this.goal)
             })
         }
@@ -88,32 +94,30 @@ let timer = setInterval(step, 1000 / 60)
 /*
 -------------- CONTROL MANAGEMENT
 */
-function setNewFPS(FPS) {
-    if (FPS < 10 || FPS > 300) return;
+function setNewFPS(fps) {
+    if (fps < 10 || fps > 300) return;
 
-    $("#ActualFPS").val(FPS);
+    $("#ActualFPS").val(fps);
 
     if (timer) {
         clearInterval(timer);
         timer = null;
-        timer = setInterval(step, 1000 / FPS)
+        timer = setInterval(step, 1000 / fps)
     }
 }
 
-$("#FPSUp").on('click', (e) => {
-    let fps = parseInt($("#ActualFPS").val())
-    fps += 5
-
-
-    setNewFPS(fps)
+$("#pause").on('click', (e) => {
+    if (timer) {
+        clearInterval(timer);
+        timer = null
+    } else {
+        let fps = parseInt($("#ActualFPS").val())
+        timer = setInterval(step, 1000 / fps)
+    }
 })
 
-$("#FPSDown").on('click', (e) => {
-    let fps = parseInt($("#ActualFPS").val())
-    fps -= 5
-
-
-    setNewFPS(fps)
+$("#restart").on('click', (e) => {
+    window.location.reload();
 })
 
 $("#ActualFPS").on("change", (e) => {

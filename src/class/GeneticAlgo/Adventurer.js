@@ -1,13 +1,14 @@
 import { Brain } from './Brain'
 import { MyMath } from '../MyMath'
 import { GridObject } from '../GridObject';
+import CONFIG from '../../config'
 
 /**
  * 
  */
 export class Adventurer extends GridObject {
     constructor(x, y, ctx, grid) {
-        super(x, y, 1, 1, 'white', ctx, grid)
+        super(x, y, 1, 1, CONFIG.ADVENTURER_COLOR, ctx, grid)
 
         this.SPEED = 1
         this.START_X = x
@@ -18,7 +19,7 @@ export class Adventurer extends GridObject {
         this.reachedGoal = false
         this.isDead = false
         this.direction = 0
-        this.brain = new Brain(1000)
+        this.brain = new Brain(CONFIG.BRAIN_SIZE)
     }
 
     /**
