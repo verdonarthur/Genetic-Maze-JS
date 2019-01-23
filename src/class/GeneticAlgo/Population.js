@@ -5,14 +5,14 @@ import CONFIG from '../../config'
 export class Population {
 
     constructor(size, ctx) {
-        this.Adventurers = []
+        this.adventurers = []
         this.fitnessSum
         this.gen = 1
         this.bestAdventurer = 0
         this.minStep = CONFIG.MIN_STEP
 
         for (let i = 0; i < size; i++) {
-            this.Adventurers.push(new Adventurer(2, 5, ctx))
+            this.adventurers.push(new Adventurer(2, 5, ctx))
         }
 
     }
@@ -21,7 +21,7 @@ export class Population {
      * Check if all the population is alive
      */
     checkPopulation() {
-        this.Adventurers.forEach((adventurer) => {
+        this.adventurers.forEach((adventurer) => {
             if (adventurer.brain.step > this.minStep) {
                 adventurer.isDead = true
             }
@@ -33,7 +33,7 @@ export class Population {
      * @param {*} chest 
      */
     calculateAllAdventurerFitness(chest) {
-        this.Adventurers.forEach((adventurer) => {
+        this.adventurers.forEach((adventurer) => {
             adventurer.calculateFitness(chest)
         })
     }
@@ -44,7 +44,7 @@ export class Population {
     isAllAdventurerDead() {
         let allDead = true
 
-        this.Adventurers.forEach((adventurer) => {
+        this.adventurers.forEach((adventurer) => {
             if (!adventurer.isDead && !adventurer.reachedGoal) {
                 allDead = false
                 return
@@ -61,22 +61,8 @@ export class Population {
      * a new generation with them
      */
     naturalSelection() {
-        let newAdventurers = new Array(this.Adventurers.length)
-        this.setBestAdventurer()
-        this.calculateFitnessSum()
-
-        // the champion lives on
-        newAdventurers[0] = this.Adventurers[this.bestAdventurer].makeABaby()
-        newAdventurers[0].isBest = true
-        newAdventurers[0].color = CONFIG.BEST_ADVENTURER_COLOR
-
-        for (let i = 1; i < newAdventurers.length; i++) {
-            let parent = this.selectParent()
-            newAdventurers[i] = parent.makeABaby()
-        }
-
-        this.Adventurers = newAdventurers.slice()
-        this.gen++
+        this.adventurers = []
+        // TODO
     }
 
     /**
@@ -85,8 +71,8 @@ export class Population {
     calculateFitnessSum() {
         this.fitnessSum = 0
 
-        for (let i = 0; i < this.Adventurers.length; i++) {
-            this.fitnessSum += this.Adventurers[i].fitness;
+        for (let i = 0; i < this.adventurers.length; i++) {
+            this.fitnessSum += this.adventurers[i].fitness;
 
         }
     }
@@ -103,11 +89,11 @@ export class Population {
         let rand = MyMath.random(this.fitnessSum)
         let runningSum = 0
 
-        for (let i = 0; i < this.Adventurers.length; i++) {
-            runningSum += this.Adventurers[i].fitness
+        for (let i = 0; i < this.adventurers.length; i++) {
+            runningSum += this.adventurers[i].fitness
 
             if (runningSum > rand) {
-                return this.Adventurers[i]
+                return this.adventurers[i]
             }
 
         }
@@ -120,8 +106,8 @@ export class Population {
      * Will add random movement to the newborn adventurers
      */
     mutateBabies() {
-        for (let i = 0; i < this.Adventurers.length; i++) {
-            this.Adventurers[i].brain.mutate()
+        for (let i = 0; i < this.adventurers.length; i++) {
+            this.adventurers[i].brain.mutate()
         }
     }
 
@@ -132,17 +118,17 @@ export class Population {
         let max = 0
         let maxIndex = 0
 
-        for (let i = 0; i < this.Adventurers.length; i++) {
-            if (this.Adventurers[i].fitness > max) {
-                max = this.Adventurers[i].fitness
+        for (let i = 0; i < this.adventurers.length; i++) {
+            if (this.adventurers[i].fitness > max) {
+                max = this.adventurers[i].fitness
                 maxIndex = i
             }
         }
         
         this.bestAdventurer = maxIndex
 
-        if (this.Adventurers[this.bestAdventurer].reachedGoal) {
-            this.minStep = this.Adventurers[this.bestAdventurer].brain.step
+        if (this.adventurers[this.bestAdventurer].reachedGoal) {
+            this.minStep = this.adventurers[this.bestAdventurer].brain.step
             
             $("#nbStep").text(this.minStep)
         }

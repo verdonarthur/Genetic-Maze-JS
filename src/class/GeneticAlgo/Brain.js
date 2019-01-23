@@ -41,17 +41,6 @@ export class Brain {
      * mutates the brain by setting some of the directions to random vectors
      */
     mutate() {
-        //chance that any vector in directions gets changed
-        let mutationRate = CONFIG.PERCENTAGE_MUTATION
-
-        for (let i = 0; i < this.directions.length; i++) {
-            let rand = MyMath.random(1)
-            if (rand < mutationRate) {
-                
-                //set this direction as a random direction 
-                let randomAngle = MyMath.random(2 * Math.PI)
-                this.directions[i] = randomAngle
-            }
-        }
+        // TODO
     }
 }

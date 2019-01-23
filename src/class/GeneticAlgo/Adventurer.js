@@ -106,24 +106,15 @@ export class Adventurer extends GridObject {
      * @param {*} goal 
      */
     calculateFitness(goal) {
-
-        if (this.reachedGoal) {
-            this.fitness = (1 / (this.brain.step * this.brain.step)) + 1
-        } else {
-            let distanceToGoal = Math.round(MyMath.distBetweenTwoPoints(this.x, this.y, goal.x, goal.y))
-
-            if(distanceToGoal == 0){this.fitness = 0; return}
-
-            this.fitness = 1.0 / (distanceToGoal * distanceToGoal)
-        }
+        // TODO
+        
     }
 
     /**
      * #straightforward
      */
     makeABaby() {
-        let baby = new Adventurer(this.START_X, this.START_Y, this.ctx)
-        baby.brain = this.brain.clone()
-        return baby
+        // TODO
+        return null
     }
 }

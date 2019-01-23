@@ -42,7 +42,7 @@ class Game {
 
         this.goal.draw()
 
-        this.population.Adventurers.forEach((adventurer) => {
+        this.population.adventurers.forEach((adventurer) => {
             if (showOnlyTheBest) {
                 if (adventurer.isBest) {
                     adventurer.draw(this.grid)
@@ -61,7 +61,7 @@ class Game {
             $("#nbGen").text(this.population.gen)
         } else {
             this.population.checkPopulation()
-            this.population.Adventurers.forEach((adventurer) => {
+            this.population.adventurers.forEach((adventurer) => {
                 adventurer.move(this.walls, this.grid, this.goal)
             })
         }
